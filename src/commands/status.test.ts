@@ -1,10 +1,10 @@
 import { afterEach, beforeEach, describe, expect, test } from "bun:test";
-import { mkdir, mkdtemp, rm } from "node:fs/promises";
+import { mkdir, mkdtemp } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { stripAnsi } from "../logging/color.ts";
 import { createSessionStore } from "../sessions/store.ts";
-import { createTempGitRepo } from "../test-helpers.ts";
+import { cleanupTempDir, createTempGitRepo } from "../test-helpers.ts";
 import type { AgentSession } from "../types.ts";
 import {
 	gatherStatus,
@@ -343,7 +343,7 @@ describe("run scoping", () => {
 			// out-of-scope builder must NOT appear
 			expect(names).not.toContain("builder-2");
 		} finally {
-			await rm(tempDir, { recursive: true, force: true });
+			await cleanupTempDir(tempDir);
 		}
 	});
 });
@@ -390,7 +390,7 @@ describe("--watch deprecation", () => {
 		} finally {
 			process.stderr.write = originalStderr;
 			process.chdir(originalCwd);
-			await rm(tmpDir, { recursive: true, force: true });
+			await cleanupTempDir(tmpDir);
 		}
 
 		const err = stderrChunks.join("");
@@ -431,7 +431,7 @@ describe("gatherStatus reconciliation", () => {
 			expect(agent).toBeDefined();
 			expect(agent?.state).toBe("zombie");
 		} finally {
-			await rm(tempDir, { recursive: true, force: true });
+			await cleanupTempDir(tempDir);
 		}
 	});
 
@@ -460,7 +460,7 @@ describe("gatherStatus reconciliation", () => {
 			expect(agent).toBeDefined();
 			expect(agent?.state).toBe("completed");
 		} finally {
-			await rm(tempDir, { recursive: true, force: true });
+			await cleanupTempDir(tempDir);
 		}
 	});
 
@@ -490,7 +490,7 @@ describe("gatherStatus reconciliation", () => {
 			expect(agent).toBeDefined();
 			expect(agent?.state).toBe("zombie");
 		} finally {
-			await rm(tempDir, { recursive: true, force: true });
+			await cleanupTempDir(tempDir);
 		}
 	});
 });
@@ -521,7 +521,7 @@ describe("subprocess caching (invalidateStatusCache)", () => {
 			expect(Array.isArray(result1.worktrees)).toBe(true);
 			expect(Array.isArray(result2.worktrees)).toBe(true);
 		} finally {
-			await rm(tempDir, { recursive: true, force: true });
+			await cleanupTempDir(tempDir);
 		}
 	});
 });
