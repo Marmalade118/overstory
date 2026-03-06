@@ -31,7 +31,13 @@ import { createMulchClient } from "../mulch/client.ts";
 import { openSessionStore } from "../sessions/compat.ts";
 import type { AgentSession, MulchDoctorResult, MulchPruneResult, MulchStatus } from "../types.ts";
 import { listWorktrees, removeWorktree } from "../worktree/manager.ts";
-import { isProcessAlive, isSessionAlive, killProcessTree, killSession, listSessions } from "../worktree/tmux.ts";
+import {
+	isProcessAlive,
+	isSessionAlive,
+	killProcessTree,
+	killSession,
+	listSessions,
+} from "../worktree/tmux.ts";
 
 export interface CleanOptions {
 	agent?: string;
@@ -606,14 +612,11 @@ export async function cleanCommand(opts: CleanOptions): Promise<void> {
 			printSuccess("Agent cleaned", agentName);
 			if (agentResult.tmuxKilled) process.stdout.write(`  Tmux session killed\n`);
 			if (agentResult.pidKilled) process.stdout.write(`  Process killed (PID)\n`);
-			if (agentResult.worktreeRemoved)
-				process.stdout.write(`  Worktree removed\n`);
+			if (agentResult.worktreeRemoved) process.stdout.write(`  Worktree removed\n`);
 			if (agentResult.branchDeleted)
 				process.stdout.write(`  Branch deleted: ${agentResult.agentName}\n`);
-			if (agentResult.agentDirCleared)
-				process.stdout.write(`  Cleared agents/${agentName}/\n`);
-			if (agentResult.logsDirCleared)
-				process.stdout.write(`  Cleared logs/${agentName}/\n`);
+			if (agentResult.agentDirCleared) process.stdout.write(`  Cleared agents/${agentName}/\n`);
+			if (agentResult.logsDirCleared) process.stdout.write(`  Cleared logs/${agentName}/\n`);
 		}
 		return;
 	}

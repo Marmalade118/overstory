@@ -55,7 +55,14 @@ async function runGit(
  * Files matching these are bookkeeping artifacts that change during normal
  * orchestration and should be auto-committed rather than blocking merges.
  */
-const OS_ECO_STATE_PREFIXES = [".seeds/", ".overstory/", ".greenhouse/", ".mulch/", ".canopy/", ".claude/"];
+const OS_ECO_STATE_PREFIXES = [
+	".seeds/",
+	".overstory/",
+	".greenhouse/",
+	".mulch/",
+	".canopy/",
+	".claude/",
+];
 const OS_ECO_STATE_FILES = ["CLAUDE.md"];
 
 /**
@@ -702,11 +709,7 @@ export function createMergeResolver(options: {
 				const overlappingUntracked = untrackedFiles.filter((f) => entryFileSet.has(f));
 				if (overlappingUntracked.length > 0) {
 					await runGit(repoRoot, ["add", ...overlappingUntracked]);
-					await runGit(repoRoot, [
-						"commit",
-						"-m",
-						"chore: commit untracked files before merge",
-					]);
+					await runGit(repoRoot, ["commit", "-m", "chore: commit untracked files before merge"]);
 				}
 
 				// Tier 1: Clean merge
@@ -790,13 +793,7 @@ export function createMergeResolver(options: {
 					);
 					if (aiResult.success) {
 						if (options.mulchClient) {
-							recordConflictPattern(
-								options.mulchClient,
-								entry,
-								"ai-resolve",
-								conflictFiles,
-								true,
-							);
+							recordConflictPattern(options.mulchClient, entry, "ai-resolve", conflictFiles, true);
 						}
 						if (options.onMergeSuccess) {
 							try {
@@ -831,13 +828,7 @@ export function createMergeResolver(options: {
 					);
 					if (reimagineResult.success) {
 						if (options.mulchClient) {
-							recordConflictPattern(
-								options.mulchClient,
-								entry,
-								"reimagine",
-								conflictFiles,
-								true,
-							);
+							recordConflictPattern(options.mulchClient, entry, "reimagine", conflictFiles, true);
 						}
 						if (options.onMergeSuccess) {
 							try {

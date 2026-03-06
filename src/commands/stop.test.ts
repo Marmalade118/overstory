@@ -258,7 +258,12 @@ function makeDeps(
 	const { tmux, calls: tmuxCalls } = makeFakeTmux(sessionAliveMap);
 	const { worktree, calls: worktreeCalls } = makeFakeWorktree(worktreeConfig?.shouldFail);
 	const { git, calls: gitCalls } = makeFakeGit(gitConfig?.shouldSucceed ?? true);
-	return { deps: { _tmux: tmux, _worktree: worktree, _git: git }, tmuxCalls, worktreeCalls, gitCalls };
+	return {
+		deps: { _tmux: tmux, _worktree: worktree, _git: git },
+		tmuxCalls,
+		worktreeCalls,
+		gitCalls,
+	};
 }
 
 // --- Tests ---
